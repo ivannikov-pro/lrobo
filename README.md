@@ -1,2 +1,1 @@
-# lostrobo
-Lost Roborovski
+# Lost Roborovski NFT

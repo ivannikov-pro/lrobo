@@ -1,0 +1,55 @@
+{
+  "name": "lrobo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Lost Roborovski NFT",
+  "author": {
+    "name": "Aleksandr Ivannikov",
+    "email": "dev@ivannikov.pro",
+    "url": "https://ivannikov.pro"
+  },
+  "license": "MIT",
+  "scripts": {
+    "clean": "rimraf ./build/ && mkdirp ./build/",
+    "precompile": "yarn clean",
+    "compile": "truffle compile",
+    "predeploy": "yarn run compile",
+    "deploy": "truffle migrations --network",
+    "test": "truffle test",
+    "verify": "truffle run verify --network",
+    "flatten": "waffle flatten"
+  },
+  "homepage": "https://github.com/ivannikov-pro/lrobo#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ivannikov-pro/lrobo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ivannikov-pro/lrobo/issues",
+    "email": "dev@ivannikov.pro"
+  },
+  "files": [
+    "contracts",
+    "build"
+  ],
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.7.3",
+    "erc721a": "^4.2.3"
+  },
+  "devDependencies": {
+    "@truffle/hdwallet-provider": "^2.0.14",
+    "dotenv": "^16.0.2",
+    "ethereum-waffle": "^3.4.4",
+    "mkdirp": "^1.0.4",
+    "rimraf": "^3.0.2",
+    "truffle": "^5.5.29",
+    "truffle-plugin-verify": "^0.5.28"
+  },
+  "contributors": [
+    {
+      "name": "Aleksandr Ivannikov",
+      "email": "dev@ivannikov.pro",
+      "url": "https://ivannikov.pro"
+    }
+  ]
+}
