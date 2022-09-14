@@ -9,7 +9,7 @@
   - MetadataStore Contract: [0xfe804587844528E46e6794B5e1494af7364690b1](https://etherscan.io/address/0xfe804587844528e46e6794b5e1494af7364690b1);
   - Traits Contract: [?](https://etherscan.io/address/?).
 
-## Roborovski NFT Specs
+## Roborovski NFT
   - Name: `ROBOROVSKI`;
   - Symbol: `ROBO`;
   - Supply: 7,777;
