@@ -4,6 +4,7 @@ pragma solidity 0.8.17;
 import "erc721a/contracts/ERC721A.sol";
 import "erc721a/contracts/extensions/ERC721ABurnable.sol";
 import "erc721a/contracts/extensions/ERC721AQueryable.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "./lib/ProxyRegistry.sol";
@@ -15,11 +16,7 @@ interface IStaker {
 }
 
 interface IDescriptor {
-    function tokenURI(uint256 tokenId)
-        external
-        view
-        virtual
-        returns (string memory);
+    function tokenURI(uint256 tokenId) external view returns (string memory);
 }
 
 /**
@@ -31,6 +28,8 @@ contract LostRoboNft is
     ERC721AQueryable,
     ReentrancyGuard
 {
+    using Strings for uint256;
+
     address private _migrator;
     address private _staker;
     address public descriptor;
@@ -38,6 +37,9 @@ contract LostRoboNft is
 
     bool private _revealed;
     string private _notRevealedURI = "";
+
+    string private _base = "";
+    string private _baseExt = ".json";
 
     // OpenSea
     ProxyRegistry private _proxyRegistry;
@@ -85,25 +87,17 @@ contract LostRoboNft is
     function isApprovedForAll(address owner, address operator)
         public
         view
-        override
+        override(ERC721A, IERC721A)
         returns (bool)
     {
         if (address(_proxyRegistry.proxies(owner)) == operator) return true;
         return super.isApprovedForAll(owner, operator);
     }
 
-    function name() external view override returns (string memory) {
-        return "Name";
-    }
-
-    function symbol() external view returns (string memory) {
-        return "Symbol";
-    }
-
     function tokenURI(uint256 tokenId)
-        external
+        public
         view
-        override
+        override(ERC721A, IERC721A)
         returns (string memory)
     {
         require(
@@ -116,12 +110,6 @@ contract LostRoboNft is
         if (descriptor != address(0))
             return IDescriptor(descriptor).tokenURI(tokenId);
 
-        string memory _tokenURI = _tokenURIs[tokenId];
-        if (bytes(_tokenURI).length > 0) return _tokenURI;
-
-        return
-            string(
-                abi.encodePacked(_baseURI, tokenId.toString(), _baseExtension)
-            );
+        return string(abi.encodePacked(_base, tokenId.toString(), _baseExt));
     }
 }
