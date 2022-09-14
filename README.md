@@ -1,7 +1,7 @@
-# Lost Roborovski NFT
+# LostRobo NFT
 
 ## Specs
-  - Name: `Lost Roborovski`;
+  - Name: `LostRobo`;
   - Symbol: `LROBO`;
   - Supply: Survivors after burning;
   - OpenSea: [?](https://opensea.io/collection/?);

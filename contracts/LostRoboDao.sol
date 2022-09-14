@@ -8,7 +8,7 @@ import "@openzeppelin/contracts/governance/extensions/GovernorVotes.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorVotesQuorumFraction.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorTimelockControl.sol";
 
-contract LostRoborovskiDao is
+contract LostRoboDao is
     Governor,
     GovernorSettings,
     GovernorCountingSimple,
@@ -17,7 +17,7 @@ contract LostRoborovskiDao is
     GovernorTimelockControl
 {
     constructor(IVotes _token, TimelockController _timelock)
-        Governor("Lost Roborovski DAO")
+        Governor("LostRobo DAO")
         GovernorSettings(
             1, /* 1 block */
             45818, /* 1 week */
@@ -26,9 +26,7 @@ contract LostRoborovskiDao is
         GovernorVotes(_token)
         GovernorVotesQuorumFraction(4)
         GovernorTimelockControl(_timelock)
-    {
-        //
-    }
+    {}
 
     // The following functions are overrides required by Solidity.
     function votingDelay()
