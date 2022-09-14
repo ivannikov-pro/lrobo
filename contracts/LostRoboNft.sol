@@ -15,7 +15,9 @@ interface IStaker {
     function onUnStake(uint256[] memory tokenIds) external returns (bool);
 }
 
-interface IDescriptor {
+interface INftDescriptor {
+    function contractURI() external view returns (string memory);
+
     function tokenURI(uint256 tokenId) external view returns (string memory);
 }
 
@@ -26,7 +28,8 @@ contract LostRoboNft is
     ERC721A,
     ERC721ABurnable,
     ERC721AQueryable,
-    ReentrancyGuard
+    ReentrancyGuard,
+    Ownable
 {
     using Strings for uint256;
 
@@ -35,11 +38,12 @@ contract LostRoboNft is
     address public descriptor;
     mapping(uint256 => uint256) public roboId;
 
-    bool private _revealed;
-    string private _notRevealedURI = "";
-
-    string private _base = "";
+    // Metadata
+    bool private _revealed = false;
+    string private _notRevealedUri = "";
+    string private _baseUri = "";
     string private _baseExt = ".json";
+    string private _contractUri = "";
 
     // OpenSea
     ProxyRegistry private _proxyRegistry;
@@ -79,19 +83,21 @@ contract LostRoboNft is
         IStaker(_staker).onUnStake(tokenIds);
     }
 
-    // The following functions are overrides required by Solidity.
-    function _startTokenId() internal pure override returns (uint256) {
-        return 1;
+    // Metadata
+    function reveal() external onlyOwner {
+        _revealed = true;
     }
 
-    function isApprovedForAll(address owner, address operator)
-        public
-        view
-        override(ERC721A, IERC721A)
-        returns (bool)
-    {
-        if (address(_proxyRegistry.proxies(owner)) == operator) return true;
-        return super.isApprovedForAll(owner, operator);
+    function setNotRevealedURI(string memory uri_) external onlyOwner {
+        _notRevealedUri = uri_;
+    }
+
+    function setBaseURI(string memory uri_) external onlyOwner {
+        _baseUri = uri_;
+    }
+
+    function setBaseExtension(string memory fileExtension) external onlyOwner {
+        _baseExt = fileExtension;
     }
 
     function tokenURI(uint256 tokenId)
@@ -105,11 +111,36 @@ contract LostRoboNft is
             "ERC721Metadata: URI query for nonexistent token"
         );
 
-        if (!_revealed) return _notRevealedURI;
+        if (!_revealed) return _notRevealedUri;
 
         if (descriptor != address(0))
-            return IDescriptor(descriptor).tokenURI(tokenId);
+            return INftDescriptor(descriptor).tokenURI(tokenId);
 
-        return string(abi.encodePacked(_base, tokenId.toString(), _baseExt));
+        return string(abi.encodePacked(_baseUri, tokenId.toString(), _baseExt));
+    }
+
+    function setContractURI(string memory uri_) external onlyOwner {
+        _contractUri = uri_;
+    }
+
+    function contractURI() external view returns (string memory) {
+        if (descriptor != address(0))
+            return INftDescriptor(descriptor).contractURI();
+        return _contractUri;
+    }
+
+    // The following functions are overrides required by Solidity.
+    function _startTokenId() internal pure override returns (uint256) {
+        return 1;
+    }
+
+    function isApprovedForAll(address owner, address operator)
+        public
+        view
+        override(ERC721A, IERC721A)
+        returns (bool)
+    {
+        if (address(_proxyRegistry.proxies(owner)) == operator) return true;
+        return super.isApprovedForAll(owner, operator);
     }
 }
